@@ -847,12 +847,18 @@ body.qinfo .con-r .readout .invname{display:block!important}
 .qf-n small{font-family:var(--mono);font-size:15px;font-weight:600;line-height:1.2}
 .qf-note{margin:0;font-size:12px;line-height:1.45;color:var(--muted)}
 @media (min-width:1241px){
-  .cabin{grid-template-columns:280px minmax(0,1fr) 420px!important}
-  .qfing{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;scrollbar-width:thin}
+  .cabin{grid-template-columns:360px minmax(0,1fr) 360px!important;gap:22px!important;align-items:stretch!important}
+  .qfing,.con-r{align-self:stretch!important;max-height:none!important}
+  .qfing{position:static}
+}
+@media (min-width:1560px){
+  header{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important}
+  header .brand{grid-column:1!important;grid-row:1!important;justify-self:start}
+  header .secnav{grid-column:2!important;grid-row:1!important;justify-self:center}
+  header .hdr-r{grid-column:3!important;grid-row:1!important;justify-self:end}
 }
 @media (min-width:1500px){
-  .cabin{grid-template-columns:420px minmax(0,1fr) 420px!important}
-  .qfing{width:100%;max-width:330px;justify-self:end}
+  .cabin{grid-template-columns:400px minmax(0,1fr) 400px!important;gap:28px!important}
 }
 @media (max-width:1240px){.qfing{grid-column:1/-1;order:5}.qfing:empty{display:none}}
 </style>
