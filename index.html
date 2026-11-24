@@ -830,7 +830,7 @@ body.qinfo .con-r .readout .invname{display:block!important}
 /* ===== Digitación a la izquierda, grid centrado ===== */
 .qfing{box-sizing:border-box;min-width:0;background:rgba(22,21,28,.88);border:1px solid rgb(46,45,56);border-radius:26px;padding:22px 20px;color:var(--ink);display:flex;flex-direction:column;gap:14px}
 .qfing:not(.on){background:none;border:0;padding:0}.qfing:not(.on)>*{display:none}
-.qfing>div:empty{display:none}#qftop,#qfbot{display:flex;flex-direction:column;gap:14px}.qf-mv:not(:has(>:not([hidden]))){display:none!important}.qf-mv{display:flex;flex-direction:column;gap:14px}.qf-mv>[hidden]{display:none!important}
+.qfing>div:empty{display:none}#qftop,#qfbot,.qf-grp{display:flex;flex-direction:column;gap:14px}.qf-grp .block{margin:0}.qf-grp h2{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#a9a8b0;margin:0 0 9px;line-height:1.45}.qf-mv:not(:has(>:not([hidden]))){display:none!important}.qf-mv{display:flex;flex-direction:column;gap:14px}.qf-mv>[hidden]{display:none!important}
 .qfing .readout{margin:0!important;border-top:0!important;padding-top:0!important}.qfing .readout .nameline{display:none!important}.qfing [data-gv]>h2{display:none}
 .qfing .timeline{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .qf-vl{display:flex;flex-direction:column;gap:8px}.qf-vl table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0 -4px}
@@ -3101,6 +3101,11 @@ function qFing(){
   const top=document.getElementById("qftop"),bot=document.getElementById("qfbot"),mvb=document.getElementById("qfmv");
   const rd=document.getElementById("readout"),mn=document.getElementById("minis"),gt=document.getElementById("guideTop");
   [rd,mn&&mn.parentElement,gt].forEach(n=>{if(n&&n.parentElement!==mvb)mvb.appendChild(n);});
+  const wrap=id=>{let w=document.getElementById(id);if(!w){w=document.createElement("div");w.id=id;w.className="qf-grp";mvb.appendChild(w);}return w;};
+  const wj=wrap("qfjam"),wg=wrap("qfgame"),blk=id=>{const e=document.getElementById(id);return e&&(e.closest(".block")||e);};
+  [document.getElementById("jreadout"),blk("jstyles"),blk("jprogs")].forEach(n=>{if(n&&n.parentElement!==wj)wj.appendChild(n);});
+  [blk("gmodes")].forEach(n=>{if(n&&n.parentElement!==wg)wg.appendChild(n);});
+  wj.hidden=state.view!=="jam";wg.hidden=state.view!=="game";
   const F=QF[state.lang]||QF.en,v=state.view;let h="",b="";
   if(rd)rd.hidden=v!=="inv";if(mn&&mn.parentElement)mn.parentElement.hidden=v!=="inv";
   const hands=(attr,cur,af,fk)=>`<div class="qf-hands">${["L","R"].map(x=>`<button class="hand" ${attr}="${x}" aria-pressed="${cur===x}" aria-label="${x==="R"?F.rh:F.lh}">${handSVG(x,cur===x?af:0)}<span>${x==="R"?F.rh:F.lh}</span></button>`).join("")}</div><p class="qf-k">${fk||F.fk}</p>`;
@@ -3119,7 +3124,7 @@ function qFing(){
   }catch(e){h="";b="";}
   if(top.dataset.h!==h){top.innerHTML=h;top.dataset.h=h;}
   if(bot.dataset.h!==b){bot.innerHTML=b;bot.dataset.h=b;}
-  const on=!!h;a.classList.toggle("on",on);
+  const on=!!h||v==="jam"||v==="game";a.classList.toggle("on",on);
   requestAnimationFrame(()=>{const r=document.querySelector(".con-r");const wide=false;a.style.minHeight="";if(r)r.style.minHeight="";
     if(wide&&r){const m=Math.max(a.offsetHeight,r.offsetHeight)+"px";a.style.minHeight=m;r.style.minHeight=m;}});
 }
