@@ -834,6 +834,8 @@ body.qinfo .con-r .readout .invname{display:block!important}
 .gj-bars i{display:block;width:100%;border-radius:4px;background:rgba(255,200,61,.35)}.gj-bars i.on{background:var(--yellow)}.gj-bars small{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase}
 .gj-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:12px}.gj-list li{display:flex;justify-content:space-between;gap:8px}.gj-list span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gj-none{margin:10px 0 0;font-size:12px;color:var(--muted)}
 .gj-copy{margin-top:12px;width:100%;min-height:40px;border-radius:10px;border:1px solid rgba(255,200,61,.5);background:transparent;color:var(--yellow);font:600 13px/1.2 inherit;font-family:inherit;cursor:pointer}.gj-copy:hover{background:rgba(255,200,61,.1)}
+.qf-chf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.qf-chf>div{display:flex;flex-direction:column;gap:4px;padding:8px 6px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid transparent}.qf-chf>div.cur{border-color:var(--yellow)}
+.qf-chf small{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:center}.qf-chf span{display:flex;justify-content:space-between;align-items:center;padding:3px 8px;border-radius:7px;background:rgba(61,107,255,.18)}.qf-chf b{font-size:12px}.qf-chf i{font-style:normal;font-family:var(--mono);font-weight:700;font-size:14px}
 .pc-card{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid #2e2d38}
 .pc-card .qd-l{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow)}.pc-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.4}
 .pc-lv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.pc-lv button{min-height:40px;border-radius:10px;border:1px solid #2e2d38;background:rgba(255,255,255,.06);color:var(--ink);font:600 11px/1.2 inherit;font-family:inherit;cursor:pointer;padding:4px}
@@ -1703,7 +1705,7 @@ function padPress(r,c,down,vel,sound){
   if(state.view==="game"&&state.gmode==="parp"&&AP.on)apHit(r,c);
   if(state.view==="exam"&&EX.on)exHit(r,c);
   gjAct();if(SG.on&&state.view===SG.view)sgHit(r,c);
-  if(state.view==="game"&&PC.on)pcHit(r,c);
+  if(state.view==="jam"&&PC.on)pcHit(r,c);
   if(sound&&!PC.on&&!(state.view==="game"&&G.running&&state.gmode==="name")){const a=ac();if(a){if(heldRel[k])heldRel[k]();heldRel[k]=tone(padPitch(r,c),a.currentTime+0.005,6,vel);}}
   if(isPrac())practiceNote(padPitch(r,c),r,c);
   else if(state.view==="game"&&G.running){
@@ -3126,8 +3128,12 @@ document.addEventListener("click",e=>{
     if(state.view!=="exam"){const tb=document.querySelector('#secnav [data-view="exam"]');if(tb)tb.click();}else render();return;}
   const s2=e.target.closest("[data-qbk]");if(s2){const tt=document.getElementById("toast");if(tt){tt.textContent=qT().bkSoon+" · "+qT().bkLv+" "+s2.dataset.qbk;tt.hidden=false;clearTimeout(window._qbkT);window._qbkT=setTimeout(()=>{tt.hidden=true;},2200);}}});
 var QLOCK='<svg class="lk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
-const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky",it:"Inversions of {C}",in:"Tap a shape to see it on the grid and notice which note ends up on the bottom. In chords I do use the thumb.",pt:"Your progression",vt:"Voices",vr:["top","middle","bottom"],vc:"common tone with the previous chord",pn:"Tap a card to see that chord. With voice leading, the common tones stay on the same pad and the other notes move as little as possible."},
- es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique",it:"Inversiones de {C}",in:"Toca una forma para verla en el grid y fíjate qué nota queda abajo. En los acordes sí uso el pulgar.",pt:"Tu progresión",vt:"Voces",vr:["arriba","medio","bajo"],vc:"nota común con el acorde anterior",pn:"Toca una tarjeta para ver ese acorde. Con conducción de voces, las notas comunes se quedan en el mismo pad y las demás se mueven lo menos posible."}};
+const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky",it:"Inversions of {C}",chf:"Proposed fingering",in:"Tap a shape to see it on the grid and notice which note ends up on the bottom. In chords I do use the thumb.",pt:"Your progression",vt:"Voices",vr:["top","middle","bottom"],vc:"common tone with the previous chord",pn:"Tap a card to see that chord. With voice leading, the common tones stay on the same pad and the other notes move as little as possible."},
+ es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique",it:"Inversiones de {C}",chf:"Digitación propuesta",in:"Toca una forma para verla en el grid y fíjate qué nota queda abajo. En los acordes sí uso el pulgar.",pt:"Tu progresión",vt:"Voces",vr:["arriba","medio","bajo"],vc:"nota común con el acorde anterior",pn:"Toca una tarjeta para ver ese acorde. Con conducción de voces, las notas comunes se quedan en el mismo pad y las demás se mueven lo menos posible."}};
+function chFing(pads,hand){const L=hand==="L",ps=pads.map((p,i)=>({...p,i}));ps.sort((a,b)=>L?(b.c-a.c)||(a.r-b.r):(a.c-b.c)||(a.r-b.r));
+  const base=ps[0].c,d=x=>Math.abs(x.c-base),out=[];out[ps[0].i]="T";const f1=Math.max(1,Math.min(3,d(ps[1]))),f2=Math.max(f1+1,Math.min(4,d(ps[2])));out[ps[1].i]=String(f1);out[ps[2].i]=String(f2);return out;}
+function chPaint(){if(state.view!=="inv"||!sFing())return;try{const pads=chordPads(state.deg,state.inv),f=chFing(pads,state.hand);
+  pads.forEach((x,i)=>{const el=document.querySelector(`#grid [data-rc="${x.r},${x.c}"]`);if(!el)return;let fn=el.querySelector(".fn");if(!fn){fn=document.createElement("span");fn.className="fn";el.appendChild(fn);}fn.textContent=f[i];});}catch(e){}}
 function sFing(){try{return localStorage.getItem("gj-sfing")==="1";}catch(e){return false;}}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-qsfing]");if(!b)return;try{localStorage.setItem("gj-sfing",b.dataset.qsfing);}catch(_){}render();});
 function sGuide(){try{return localStorage.getItem("gj-sguide")!=="0";}catch(e){return true;}}
@@ -3177,13 +3183,13 @@ function pcDrum(type,t0){const a=ac();if(!a)return;const g=a.createGain();g.conn
   else {f.type="highpass";f.frequency.value=7000;g.gain.setValueAtTime(.35,t0);g.gain.exponentialRampToValueAtTime(.001,t0+.05);}
   n.connect(f);f.connect(g);n.start(t0);n.stop(t0+.3);}
 const pcIn=(z,r,c)=>r>=z.r&&r<=z.r+1&&c>=z.c&&c<=z.c+1;
-function pcStart(){const a=ac();if(!a||PC.on)return;if(typeof G!=="undefined"&&G.running&&typeof stopPractice==="function")stopPractice();if(typeof AP!=="undefined"&&AP.on)apStop(true);if(metOn)stopMet();
+function pcStart(){const a=ac();if(!a||PC.on)return;if(typeof jamOn!=="undefined"&&jamOn&&typeof jamStop==="function")jamStop();if(metOn)stopMet();
   const pat=PCP[PC.lvl-1],rep=PC.lvl===3?2:4,e8=60/state.bpm/2,q=60/state.bpm,qs=a.currentTime+.15,t0=qs+4*q,steps=[];
   for(let r=0;r<rep;r++)pat.forEach((z,i)=>{if(z)steps.push({z,t:t0+(r*pat.length+i)*e8,res:null});});
   Object.assign(PC,{on:true,steps,qs,q,qi:0,qn:4+Math.ceil(rep*pat.length*e8/q)+1,t0,st:{p:0,g:0,m:0,w:0},flash:{},cur:-2,e8,started:Date.now()});
   render();PC.raf=requestAnimationFrame(pcTick);}
 function pcStop(manual){if(!PC.on)return;PC.on=false;cancelAnimationFrame(PC.raf);PC.flash={};if(!manual)pcFinish();render();}
-function pcTick(){if(!PC.on)return;if(state.view!=="game"){pcStop(true);return;}const a=ac(),now=a.currentTime-jgLat();
+function pcTick(){if(!PC.on)return;if(state.view!=="jam"){pcStop(true);return;}const a=ac(),now=a.currentTime-jgLat();
   while(PC.qi<PC.qn&&PC.qs+PC.qi*PC.q<a.currentTime+.12){click(PC.qs+PC.qi*PC.q,PC.qi%4===0);PC.qi++;}
   for(const x of PC.steps)if(!x.res&&now>x.t+JG_G){x.res="m";PC.st.m++;}
   let cur=-1;PC.steps.forEach((x,i)=>{if(x.t-PC.e8*.5<=now)cur=i;});if(cur!==PC.cur){PC.cur=cur;pcPaint();}
@@ -3195,8 +3201,8 @@ function pcHit(r,c){const a=ac();if(!a)return;const now=a.currentTime-jgLat(),ke
   let cls;if(best&&bd<=JG_G){best.res=bd<=JG_P?"p":"g";PC.st[best.res]++;cls="ok";}else if(now>PC.t0-.3){PC.st.w++;cls="bad";}else return;
   PC.flash[key]=cls;pcPaint();setTimeout(()=>{if(PC.flash[key]===cls){delete PC.flash[key];pcPaint();}},160);}
 function pcPaint(){const g=document.getElementById("grid");if(!g)return;g.querySelectorAll(".pad.pcf").forEach(el=>el.classList.remove("q","next","ok","bad","pcf","pcz"));
-  if(!PC.on||state.view!=="game"){if(typeof ledSync==="function")ledSync();return;}
-  g.querySelectorAll(".pad.dim").forEach(el=>el.classList.remove("dim"));
+  if(!PC.on||state.view!=="jam"){if(typeof ledSync==="function")ledSync();return;}
+  g.querySelectorAll(".pad").forEach(el=>el.classList.remove("dim","jc","jt","jn","on","tonic","pnat","pc","dark"));
   const cur=PC.steps[Math.max(0,PC.cur)],nx=PC.steps[Math.max(0,PC.cur)+1],paintZ=(z,cls)=>{if(!z)return;for(let r=z.r;r<=z.r+1;r++)for(let c=z.c;c<=z.c+1;c++){const el=g.querySelector(`[data-rc="${r},${c}"]`);if(el)el.classList.add(cls,"pcf");}};
   Object.values(PCZ).forEach(z=>{if((PC.lvl===1&&!["k","s"].includes(Object.keys(PCZ).find(k=>PCZ[k]===z)))||(PC.lvl===2&&!["k","s","h","t"].includes(Object.keys(PCZ).find(k=>PCZ[k]===z))))return;paintZ(z,"pcz");});
   if(PC.cur>=0||true){if(nx&&nx.z!==(cur&&cur.z))paintZ(PCZ[nx.z],"next");if(cur&&PC.cur>=0)paintZ(PCZ[cur.z],"q");else if(cur)paintZ(PCZ[cur.z],"next");}
@@ -3312,7 +3318,7 @@ document.addEventListener("click",e=>{if(e.target.closest("#qfdaily")){mStart("d
   if(innerWidth>760&&e.target.closest("#mgBack")){e.stopImmediatePropagation();mHubClose();}},true);
 document.addEventListener("click",e=>{const b=e.target.closest("[data-qsg]");if(!b)return;if(b.dataset.qsg==="go")sgStart();else sgStop(true);});
 function qFing(){
-  if(SG.on)sgPaint();if(PC.on)pcPaint();
+  if(SG.on)sgPaint();if(PC.on)pcPaint();chPaint();
   const gd=document.getElementById("guide");if(gd){gd.style.display="";if(![...gd.children].some(c=>c.offsetHeight>0))gd.style.display="none";}
   let a=document.getElementById("qfing");
   if(!a){const vp=document.querySelector(".cabin>.viewport");if(!vp)return;a=document.createElement("aside");a.id="qfing";a.className="qfing";a.setAttribute("aria-live","off");
@@ -3325,7 +3331,7 @@ function qFing(){
   [document.getElementById("jreadout"),blk("jstyles"),blk("jprogs")].forEach(n=>{if(n&&n.parentElement!==wj)wj.appendChild(n);});
   let dly=document.getElementById("qfdaily");if(!dly){dly=document.createElement("button");dly.id="qfdaily";dly.className="qf-daily";wg.insertBefore(dly,wg.firstChild);}
   [blk("gmodes")].forEach(n=>{if(n&&n.parentElement!==wg)wg.appendChild(n);});
-  let pcc=document.getElementById("qfperc");if(!pcc){pcc=document.createElement("div");pcc.id="qfperc";wg.appendChild(pcc);}{const ph=pcCardHTML();if(pcc.dataset.h!==ph){pcc.innerHTML=ph;pcc.dataset.h=ph;}}
+  let pcc=document.getElementById("qfperc");if(!pcc){pcc=document.createElement("div");pcc.id="qfperc";wj.appendChild(pcc);}{const ph=pcCardHTML();if(pcc.dataset.h!==ph){pcc.innerHTML=ph;pcc.dataset.h=ph;}}
   try{const M=t().mg,bd=(typeof mBest==="function"?mBest():{})["daily-"+dayKey()],dh=`<span class="qd-l">${M.dailyLbl}</span><b>${M.dailyTitle}</b><small>${bd?M.dailyDone.replace("{N}",bd):M.dailyNew}</small><span class="qd-go">▶</span>`;if(dly.dataset.h!==dh){dly.innerHTML=dh;dly.dataset.h=dh;}}catch(e){}
   wj.hidden=state.view!=="jam";wg.hidden=state.view!=="game";
   const F=QF[state.lang]||QF.en,v=state.view;let h="",b="";
@@ -3338,7 +3344,7 @@ function qFing(){
   else if(v==="arp"){const Ly=arpLayout();
     if(Ly.fit){const seq=arpSeq(Ly),cn=arpPlaying&&arpNow>=0?Ly.notes[arpNow]:null,af=cn&&typeof cn.f==="number"?cn.f:0;
       h=`<h3>${F.t}</h3>`+hands("data-ahand",state.ahand,af,F.fa)+`<div class="qf-row"><span class="qf-p">${Ly.ch.name}</span><div class="qf-n">${seq.map(n=>`<span class="${n.role===0?"tj":""}${cn===n?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${n.f}</small></span>`).join("")}</div></div>`;}}
-  else if(v==="inv"){h=`<h3>${F.it.replace("{C}",chordInfo(state.deg).name)}</h3>`;b=`<p class="qf-note">${F.in}</p>`;}
+  else if(v==="inv"){h=`<h3>${F.it.replace("{C}",chordInfo(state.deg).name)}</h3>`;b=`<div class="qf-row"><span class="qf-p">${F.chf} · ${state.hand==="L"?F.lh:F.rh}</span><div class="qf-chf">${[0,1,2].map(iv=>{const pads=chordPads(state.deg,iv),f=chFing(pads,state.hand),o=pads.map((x,i)=>({x,f:f[i]})).sort((a,b)=>a.x.p-b.x.p);return `<div class="${iv===state.inv?"cur":""}"><small>${t().invShort[iv]}</small>${o.map(y=>`<span><b>${pcName(((y.x.p%12)+12)%12)}</b><i>${y.f}</i></span>`).join("")}</div>`;}).join("")}</div></div><p class="qf-note">${F.in}</p>`;}
   else if(v==="prog"){h=`<h3>${F.pt}</h3>`;const V=voicings();
     if(V.length){const rows=[2,1,0].map(k=>`<tr><th>${F.vr[2-k]}</th>${V.map((x,i)=>{const n=x.pads[k];if(!n)return "<td></td>";const prev=i>0?V[i-1].pads:null,cm=prev&&prev.some(y=>y.p===n.p);return `<td class="${i===state.step?"cur ":""}${cm?"cm":""}">${pcName(((n.p%12)+12)%12)}</td>`;}).join("")}</tr>`).join("");
       b=`<div class="qf-vl"><span class="qf-p">${F.vt}</span><table><thead><tr><th></th>${V.map((x,i)=>`<th class="${i===state.step?"cur":""}">${chordInfo(x.d).rn}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table><p class="qf-k"><i></i>${F.vc}</p></div>`;}
@@ -3399,7 +3405,7 @@ function qRender(){
     const met=`<button class="qmet" data-qact="metro" aria-pressed="${metOn}" aria-label="${esc(L.metro||"Metronome")}" title="${esc(L.metro||"Metronome")}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8l-3-17h-2z"/><path d="M12 14l5-6"/></svg></button>`;
     const big=pb?`<button class="qbig${pon?" on":""}" data-qact="${V[1]}"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="${pon?"M6 4h4v16H6zM14 4h4v16h-4z":"M7 4l13 8-13 8z"}"/></svg>${esc(pon?Q.stop:Q.play)}</button>`:"";
     h=`<div class="qhead">${title?`<h2 class="qtitle qtitle-r">${title}</h2>`:`<span class="qlab">${Q.tempo}</span>`}${ibtn}</div>
-    <div class="qplay${big?"":" qplay-nb"}">${big}${tempo}${met}</div>${state.view==="arp"?sgBtn():""}
+    <div class="qplay${big?"":" qplay-nb"}">${big}${tempo}${met}</div>${state.view==="arp"?sgBtn():""}${state.view==="inv"?`<div class="qduo"><div class="qsec"><span class="qlab">${Q.hand}</span><div class="qtypes" role="group"><button data-hand="L" aria-pressed="${state.hand==="L"}">${Q.left}</button><button data-hand="R" aria-pressed="${state.hand!=="L"}">${Q.right}</button></div></div><div class="qsec"><span class="qlab">${(QG[state.lang]||QG.en).f}</span><div class="qtypes" role="group"><button data-qsfing="1" aria-pressed="${sFing()}">${(QG[state.lang]||QG.en).on}</button><button data-qsfing="0" aria-pressed="${!sFing()}">${(QG[state.lang]||QG.en).off}</button></div></div></div>`:""}
     ${keysH}
     <div class="qsec"><span class="qlab">${Q.scale}</span><div class="qtypes" role="group">${it("major")}${it("minor")}</div></div>`;
   }
