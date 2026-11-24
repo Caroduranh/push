@@ -826,6 +826,35 @@ body.qinfo .con-r .readout .invname{display:block!important}
 .qbkx{margin-bottom:16px}
 .qbkx-row{display:flex;flex-direction:column;gap:10px}
 .qbk-back{align-self:flex-start;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:700 14px/1 inherit;font-family:inherit;cursor:pointer}
+
+/* ===== Digitación a la izquierda, grid centrado ===== */
+.qfing{box-sizing:border-box;min-width:0;background:rgba(22,21,28,.88);border:1px solid rgb(46,45,56);border-radius:26px;padding:22px 20px;color:var(--ink);display:flex;flex-direction:column;gap:14px}
+.qfing:empty{background:none;border:0;padding:0}
+.qfing h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.qf-hands{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.qf-hands .hand{min-width:0;width:100%}
+.qf-hands .hand[aria-pressed="true"]{opacity:1}
+.qf-hands svg{width:100%;max-width:120px;height:auto;display:block;margin:0 auto}
+.qf-k{margin:0;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);line-height:1.5}
+.qf-row{display:flex;flex-direction:column;gap:6px;transition:opacity .15s}
+.qf-row.dim{opacity:.35}
+.qf-p{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.qf-n{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.qf-n span{display:flex;flex-direction:column;align-items:center;min-width:0;padding:5px 2px 4px;border-radius:9px;background:rgba(61,107,255,.16);border:1px solid rgba(61,107,255,.35)}
+.qf-n span.tj{background:rgba(236,104,58,.18);border-color:rgba(236,104,58,.5)}
+.qf-n span.now{background:var(--blue);border-color:var(--blue);color:#fff}
+.qf-n b{font-size:12px;font-weight:600;line-height:1.1}
+.qf-n small{font-family:var(--mono);font-size:15px;font-weight:600;line-height:1.2}
+.qf-note{margin:0;font-size:12px;line-height:1.45;color:var(--muted)}
+@media (min-width:1241px){
+  .cabin{grid-template-columns:280px minmax(0,1fr) 420px!important}
+  .qfing{position:sticky;top:12px;align-self:start;max-height:calc(100vh - 24px);overflow:auto;scrollbar-width:thin}
+}
+@media (min-width:1500px){
+  .cabin{grid-template-columns:420px minmax(0,1fr) 420px!important}
+  .qfing{width:100%;max-width:330px;justify-self:end}
+}
+@media (max-width:1240px){.qfing{grid-column:1/-1;order:5}.qfing:empty{display:none}}
 </style>
 </head>
 <body>
@@ -3049,6 +3078,23 @@ document.addEventListener("click",e=>{
     if(state.view!=="exam"){const tb=document.querySelector('#secnav [data-view="exam"]');if(tb)tb.click();}else render();return;}
   const s2=e.target.closest("[data-qbk]");if(s2){const tt=document.getElementById("toast");if(tt){tt.textContent=qT().bkSoon+" · "+qT().bkLv+" "+s2.dataset.qbk;tt.hidden=false;clearTimeout(window._qbkT);window._qbkT=setTimeout(()=>{tt.hidden=true;},2200);}}});
 var QLOCK='<svg class="lk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky"},
+ es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique"}};
+function qFing(){
+  let a=document.getElementById("qfing");
+  if(!a){const vp=document.querySelector(".cabin>.viewport");if(!vp)return;a=document.createElement("aside");a.id="qfing";a.className="qfing";a.setAttribute("aria-live","off");vp.parentNode.insertBefore(a,vp);}
+  const F=QF[state.lang]||QF.en,v=state.view;let h="";
+  const hands=(attr,cur,af,fk)=>`<div class="qf-hands">${["L","R"].map(x=>`<button class="hand" ${attr}="${x}" aria-pressed="${cur===x}" aria-label="${x==="R"?F.rh:F.lh}">${handSVG(x,cur===x?af:0)}<span>${x==="R"?F.rh:F.lh}</span></button>`).join("")}</div><p class="qf-k">${fk||F.fk}</p>`;
+  try{
+  if(v==="scales"&&state.dev!=="move"){const Ly=scaleLayout();
+    if(Ly.notes.length){const fi=focusIdx(),cur=scaleNow>=0?scaleSeq()[scaleNow]:null,af=cur?fingerOf(cur):0;
+      h=`<h3>${F.t}</h3>`+hands("data-hand",state.hand,af)+Ly.seq.map((pt,i)=>`<div class="qf-row${fi>=0&&fi!==i?" dim":""}"><span class="qf-p">P${pt}</span><div class="qf-n">${Ly.notes.filter(n=>n.pat===pt).map(n=>`<span class="${n.tonic?"tj":""}${cur&&cur.p===n.p?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${fingerOf(n)}</small></span>`).join("")}</div></div>`).join("")+`<p class="qf-note">${F.sc}</p>`;}}
+  else if(v==="arp"){const Ly=arpLayout();
+    if(Ly.fit){const seq=arpSeq(Ly),cn=arpPlaying&&arpNow>=0?Ly.notes[arpNow]:null,af=cn&&typeof cn.f==="number"?cn.f:0;
+      h=`<h3>${F.t}</h3>`+hands("data-ahand",state.ahand,af,F.fa)+`<div class="qf-row"><span class="qf-p">${Ly.ch.name}</span><div class="qf-n">${seq.map(n=>`<span class="${n.role===0?"tj":""}${cn===n?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${n.f}</small></span>`).join("")}</div></div><p class="qf-note">${F.ar}</p>`;}}
+  }catch(e){h="";}
+  if(a.dataset.h!==h){a.innerHTML=h;a.dataset.h=h;}
+}
 function qRender(){
   if(!QT)return;const el=document.getElementById("qkeys");if(!el)return;const L=t(),Q=qT();
   document.body.dataset.qv=state.view;
@@ -3059,7 +3105,7 @@ function qRender(){
   const sb=document.getElementById("setBtn");if(sb)sb.setAttribute("aria-label",Q.settings);
   const sh=document.getElementById("setH");if(sh)sh.textContent=Q.settings;
   const lgl=document.getElementById("qLangLbl");if(lgl)lgl.textContent=Q.lang;
-  qBerklee(L,Q);
+  qBerklee(L,Q);qFing();
   if(state.view==="exam"){const gb=document.querySelector('#secnav [data-view="game"]');if(gb)gb.setAttribute("aria-pressed","true");}
   if(state.view==="game"||state.view==="exam"){if(el.innerHTML){el.innerHTML="";el.dataset.h="";}return;}
   const tp=curType(),sc=state.view==="scales",rpc=KEYS[state.key].root;
