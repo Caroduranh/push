@@ -868,7 +868,7 @@ body.qinfo .con-r .readout .invname{display:block!important}
 @media (min-width:1500px){
   .cabin{grid-template-columns:400px minmax(0,1fr) 400px!important;gap:28px!important}
 }
-@media (max-width:1240px){.qfing{grid-column:1/-1;order:5}.qfing:not(.on){display:none}}
+@media (max-width:1240px){body[data-qv=jam] .cabin>.viewport,body[data-qv=game] .cabin>.viewport{order:-2}body[data-qv=jam] .qfing,body[data-qv=game] .qfing{order:-1!important}.qfing{grid-column:1/-1;order:5}.qfing:not(.on){display:none}}
 </style>
 </head>
 <body>
@@ -1526,7 +1526,7 @@ function renderScales(L){
   document.getElementById("handsvg").innerHTML=["L","R"].map(h=>`<button class="hand" data-hand="${h}" aria-pressed="${state.hand===h}" aria-label="${h==="R"?L.rh:L.lh}">${handSVG(h,state.hand===h?af:0)}<span>${h==="R"?"RH":"LH"}</span></button>`).join("");
   document.getElementById("focus").innerHTML=(mv?"":`<button class="chip" data-focus="0" aria-pressed="${!state.focus}">${L.all}</button>`)+(mv?movePats():Ly.seq).map(pt=>`<button class="chip" data-focus="${pt}" aria-pressed="${state.focus===pt}">P${pt}</button>`).join("");
   const cur=scaleNow>=0?scaleSeq()[scaleNow]:null;
-  Ly.notes.forEach(n=>{marks[n.r*8+n.c]={cls:"sc "+(n.tonic?"tj":"p"+n.pat)+(fset&&!fset.has(n.p)?" dim":"")+(cur&&cur.p===n.p?" fu":""),label:"",aria:"degree "+(n.deg+1)+(n.tonic?"":", pattern "+n.pat)};});
+  const gOn=sGuide();Ly.notes.forEach(n=>{if(!gOn&&!(cur&&cur.p===n.p))return;marks[n.r*8+n.c]={cls:"sc "+(n.tonic?"tj":"p"+n.pat)+(fset&&!fset.has(n.p)?" dim":"")+(cur&&cur.p===n.p?" fu":""),label:"",aria:"degree "+(n.deg+1)+(n.tonic?"":", pattern "+n.pat)};});
   document.getElementById("grid").innerHTML=padsHTML(marks,false);
   traceData=[];document.getElementById("push").classList.remove("flow");
   const kname=k.modeId?k.sp[0]+" "+L.modeN[k.modeId]:k.sp[0]+" "+L.scale[k.mode];
@@ -3094,7 +3094,11 @@ document.addEventListener("click",e=>{
 var QLOCK='<svg class="lk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky",it:"Inversions of {C}",in:"Tap a shape to see it on the grid and notice which note ends up on the bottom. In chords I do use the thumb.",pt:"Your progression",vt:"Voices",vr:["top","middle","bottom"],vc:"common tone with the previous chord",pn:"Tap a card to see that chord. With voice leading, the common tones stay on the same pad and the other notes move as little as possible."},
  es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique",it:"Inversiones de {C}",in:"Toca una forma para verla en el grid y fíjate qué nota queda abajo. En los acordes sí uso el pulgar.",pt:"Tu progresión",vt:"Voces",vr:["arriba","medio","bajo"],vc:"nota común con el acorde anterior",pn:"Toca una tarjeta para ver ese acorde. Con conducción de voces, las notas comunes se quedan en el mismo pad y las demás se mueven lo menos posible."}};
+function sGuide(){try{return localStorage.getItem("gj-sguide")!=="0";}catch(e){return true;}}
+const QG={en:{t:"Grid guide",on:"Show",off:"Hide"},es:{t:"Guía en el grid",on:"Mostrar",off:"Ocultar"}};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-qguide]");if(!b)return;try{localStorage.setItem("gj-sguide",b.dataset.qguide);}catch(_){}render();});
 function qFing(){
+  const gd=document.getElementById("guide");if(gd){gd.style.display="";if(![...gd.children].some(c=>c.offsetHeight>0))gd.style.display="none";}
   let a=document.getElementById("qfing");
   if(!a){const vp=document.querySelector(".cabin>.viewport");if(!vp)return;a=document.createElement("aside");a.id="qfing";a.className="qfing";a.setAttribute("aria-live","off");
     a.innerHTML='<div id="qftop"></div><div class="qf-mv" id="qfmv"></div><div id="qfbot"></div>';vp.parentNode.insertBefore(a,vp);}
@@ -3165,14 +3169,15 @@ function qRender(){
     <div class="qsec"><span class="qlab">${Q.scale}</span><div class="qtypes" role="group">${it("major")}${it("minor")}</div><div class="qmodes" role="group" aria-label="${Q.modes}">${["dor","mix","lyd","phr","loc"].map(it).join("")}</div></div>
     ${pats?`<div class="qsec"><span class="qlab">${Q.pattern}</span><div class="qpats" role="group">${pats}</div></div>`:""}
     <div class="qduo"><div class="qsec"><span class="qlab">${Q.hand}</span><div class="qtypes" role="group">${hands}</div></div>
-    <div class="qsec"><span class="qlab">${Q.dir}</span><div class="qtypes" role="group"><button data-qdir="0" aria-pressed="${!state.sdown}" aria-label="${Q.up}">↑</button><button data-qdir="1" aria-pressed="${!!state.sdown}" aria-label="${Q.updown}">↑↓</button></div></div></div>`;
+    <div class="qsec"><span class="qlab">${Q.dir}</span><div class="qtypes" role="group"><button data-qdir="0" aria-pressed="${!state.sdown}" aria-label="${Q.up}">↑</button><button data-qdir="1" aria-pressed="${!!state.sdown}" aria-label="${Q.updown}">↑↓</button></div></div></div>
+    <div class="qsec"><span class="qlab">${(QG[state.lang]||QG.en).t}</span><div class="qtypes" role="group"><button data-qguide="1" aria-pressed="${sGuide()}">${(QG[state.lang]||QG.en).on}</button><button data-qguide="0" aria-pressed="${!sGuide()}">${(QG[state.lang]||QG.en).off}</button></div></div>`;
   } else {
     const V={inv:["#readout","play"],prog:["#preadout","pplay"],arp:["#areadout","aplay"],jam:["#jreadout",""]}[state.view]||["",""];
     const nl=V[0]&&document.querySelector(V[0]+" .nameline"),title=nl?nl.innerHTML:"";
     const pb=V[1]&&document.getElementById(V[1]),plab=pb?pb.textContent:"",pon=pb&&(pb.classList.contains("playing")||/stop|parar|■/i.test(plab));
     const met=`<button class="qmet" data-qact="metro" aria-pressed="${metOn}" aria-label="${esc(L.metro||"Metronome")}" title="${esc(L.metro||"Metronome")}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8l-3-17h-2z"/><path d="M12 14l5-6"/></svg></button>`;
     const big=pb?`<button class="qbig${pon?" on":""}" data-qact="${V[1]}"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="${pon?"M6 4h4v16H6zM14 4h4v16h-4z":"M7 4l13 8-13 8z"}"/></svg>${esc(pon?Q.stop:Q.play)}</button>`:"";
-    h=`<div class="qhead">${title?`<h2 class="qtitle qtitle-r">${title}</h2>`:`<span class="qlab">${Q.key}</span>`}${ibtn}</div>
+    h=`<div class="qhead">${title?`<h2 class="qtitle qtitle-r">${title}</h2>`:`<span class="qlab">${Q.tempo}</span>`}${ibtn}</div>
     <div class="qplay${big?"":" qplay-nb"}">${big}${tempo}${met}</div>
     ${keysH}
     <div class="qsec"><span class="qlab">${Q.scale}</span><div class="qtypes" role="group">${it("major")}${it("minor")}</div></div>`;
