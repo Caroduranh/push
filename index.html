@@ -829,7 +829,15 @@ body.qinfo .con-r .readout .invname{display:block!important}
 
 /* ===== Digitación a la izquierda, grid centrado ===== */
 .qfing{box-sizing:border-box;min-width:0;background:rgba(22,21,28,.88);border:1px solid rgb(46,45,56);border-radius:26px;padding:22px 20px;color:var(--ink);display:flex;flex-direction:column;gap:14px}
-.qfing:empty{background:none;border:0;padding:0}
+.qfing:not(.on){background:none;border:0;padding:0}.qfing:not(.on)>*{display:none}
+.qfing>div:empty{display:none}.qf-mv{display:flex;flex-direction:column;gap:14px}.qf-mv>[hidden]{display:none!important}
+.qfing .readout{margin:0!important;border-top:0!important;padding-top:0!important}.qfing .readout .nameline{display:none!important}.qfing [data-gv]>h2{display:none}
+.qfing .timeline{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qf-vl{display:flex;flex-direction:column;gap:8px}.qf-vl table{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed;margin:0 -4px}
+.qf-vl th{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--muted);text-align:left;letter-spacing:.06em}.qf-vl thead th{text-align:center;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink)}
+.qf-vl tbody th{width:56px}.qf-vl td{text-align:center;font-weight:600;font-size:13px;padding:7px 0;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid transparent}
+.qf-vl td.cm{border-color:var(--yellow);color:var(--yellow)}.qf-vl td.cur{background:rgba(61,107,255,.35)}.qf-vl thead th.cur{color:#7d9bff}
+.qf-vl .qf-k i{display:inline-block;width:10px;height:10px;border:1.5px solid var(--yellow);border-radius:3px;margin-right:6px;vertical-align:-1px}
 .qfing h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
 .qf-hands{display:grid;grid-template-columns:1fr 1fr;gap:22px}
 .qf-hands .hand{min-width:0;width:100%}
@@ -860,7 +868,7 @@ body.qinfo .con-r .readout .invname{display:block!important}
 @media (min-width:1500px){
   .cabin{grid-template-columns:400px minmax(0,1fr) 400px!important;gap:28px!important}
 }
-@media (max-width:1240px){.qfing{grid-column:1/-1;order:5}.qfing:empty{display:none}}
+@media (max-width:1240px){.qfing{grid-column:1/-1;order:5}.qfing:not(.on){display:none}}
 </style>
 </head>
 <body>
@@ -3084,12 +3092,17 @@ document.addEventListener("click",e=>{
     if(state.view!=="exam"){const tb=document.querySelector('#secnav [data-view="exam"]');if(tb)tb.click();}else render();return;}
   const s2=e.target.closest("[data-qbk]");if(s2){const tt=document.getElementById("toast");if(tt){tt.textContent=qT().bkSoon+" · "+qT().bkLv+" "+s2.dataset.qbk;tt.hidden=false;clearTimeout(window._qbkT);window._qbkT=setTimeout(()=>{tt.hidden=true;},2200);}}});
 var QLOCK='<svg class="lk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
-const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky"},
- es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique"}};
+const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky",it:"Inversions of {C}",in:"Tap a shape to see it on the grid and notice which note ends up on the bottom. In chords I do use the thumb.",pt:"Your progression",vt:"Voices",vr:["top","middle","bottom"],vc:"common tone with the previous chord",pn:"Tap a card to see that chord. With voice leading, the common tones stay on the same pad and the other notes move as little as possible."},
+ es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique",it:"Inversiones de {C}",in:"Toca una forma para verla en el grid y fíjate qué nota queda abajo. En los acordes sí uso el pulgar.",pt:"Tu progresión",vt:"Voces",vr:["arriba","medio","bajo"],vc:"nota común con el acorde anterior",pn:"Toca una tarjeta para ver ese acorde. Con conducción de voces, las notas comunes se quedan en el mismo pad y las demás se mueven lo menos posible."}};
 function qFing(){
   let a=document.getElementById("qfing");
-  if(!a){const vp=document.querySelector(".cabin>.viewport");if(!vp)return;a=document.createElement("aside");a.id="qfing";a.className="qfing";a.setAttribute("aria-live","off");vp.parentNode.insertBefore(a,vp);}
-  const F=QF[state.lang]||QF.en,v=state.view;let h="";
+  if(!a){const vp=document.querySelector(".cabin>.viewport");if(!vp)return;a=document.createElement("aside");a.id="qfing";a.className="qfing";a.setAttribute("aria-live","off");
+    a.innerHTML='<div id="qftop"></div><div class="qf-mv" id="qfmv"></div><div id="qfbot"></div>';vp.parentNode.insertBefore(a,vp);}
+  const top=document.getElementById("qftop"),bot=document.getElementById("qfbot"),mvb=document.getElementById("qfmv");
+  const rd=document.getElementById("readout"),mn=document.getElementById("minis"),gt=document.getElementById("guideTop");
+  [rd,mn&&mn.parentElement,gt].forEach(n=>{if(n&&n.parentElement!==mvb)mvb.appendChild(n);});
+  const F=QF[state.lang]||QF.en,v=state.view;let h="",b="";
+  if(rd)rd.hidden=v!=="inv";if(mn&&mn.parentElement)mn.parentElement.hidden=v!=="inv";
   const hands=(attr,cur,af,fk)=>`<div class="qf-hands">${["L","R"].map(x=>`<button class="hand" ${attr}="${x}" aria-pressed="${cur===x}" aria-label="${x==="R"?F.rh:F.lh}">${handSVG(x,cur===x?af:0)}<span>${x==="R"?F.rh:F.lh}</span></button>`).join("")}</div><p class="qf-k">${fk||F.fk}</p>`;
   try{
   if(v==="scales"&&state.dev!=="move"){const Ly=scaleLayout();
@@ -3098,9 +3111,16 @@ function qFing(){
   else if(v==="arp"){const Ly=arpLayout();
     if(Ly.fit){const seq=arpSeq(Ly),cn=arpPlaying&&arpNow>=0?Ly.notes[arpNow]:null,af=cn&&typeof cn.f==="number"?cn.f:0;
       h=`<h3>${F.t}</h3>`+hands("data-ahand",state.ahand,af,F.fa)+`<div class="qf-row"><span class="qf-p">${Ly.ch.name}</span><div class="qf-n">${seq.map(n=>`<span class="${n.role===0?"tj":""}${cn===n?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${n.f}</small></span>`).join("")}</div></div><p class="qf-note">${F.ar}</p>`;}}
-  }catch(e){h="";}
-  if(a.dataset.h!==h){a.innerHTML=h;a.dataset.h=h;}
-  requestAnimationFrame(()=>{const r=document.querySelector(".con-r");const wide=innerWidth>=1241&&h;a.style.minHeight="";if(r)r.style.minHeight="";
+  else if(v==="inv"){h=`<h3>${F.it.replace("{C}",chordInfo(state.deg).name)}</h3>`;b=`<p class="qf-note">${F.in}</p>`;}
+  else if(v==="prog"){h=`<h3>${F.pt}</h3>`;const V=voicings();
+    if(V.length){const rows=[2,1,0].map(k=>`<tr><th>${F.vr[2-k]}</th>${V.map((x,i)=>{const n=x.pads[k];if(!n)return "<td></td>";const prev=i>0?V[i-1].pads:null,cm=prev&&prev.some(y=>y.p===n.p);return `<td class="${i===state.step?"cur ":""}${cm?"cm":""}">${pcName(((n.p%12)+12)%12)}</td>`;}).join("")}</tr>`).join("");
+      b=`<div class="qf-vl"><span class="qf-p">${F.vt}</span><table><thead><tr><th></th>${V.map((x,i)=>`<th class="${i===state.step?"cur":""}">${chordInfo(x.d).rn}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table><p class="qf-k"><i></i>${F.vc}</p></div>`;}
+    b+=`<p class="qf-note">${F.pn}</p>`;}
+  }catch(e){h="";b="";}
+  if(top.dataset.h!==h){top.innerHTML=h;top.dataset.h=h;}
+  if(bot.dataset.h!==b){bot.innerHTML=b;bot.dataset.h=b;}
+  const on=!!h;a.classList.toggle("on",on);
+  requestAnimationFrame(()=>{const r=document.querySelector(".con-r");const wide=innerWidth>=1241&&on&&(v==="scales"||v==="arp");a.style.minHeight="";if(r)r.style.minHeight="";
     if(wide&&r){const m=Math.max(a.offsetHeight,r.offsetHeight)+"px";a.style.minHeight=m;r.style.minHeight=m;}});
 }
 function qRender(){
