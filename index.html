@@ -829,6 +829,20 @@ body.qinfo .con-r .readout .invname{display:block!important}
 
 /* ===== Digitación a la izquierda, grid centrado ===== */
 .qfing{box-sizing:border-box;min-width:0;background:rgba(22,21,28,.88);border:1px solid rgb(46,45,56);border-radius:26px;padding:22px 20px;color:var(--ink);display:flex;flex-direction:column;gap:14px}
+.dnpop{width:300px!important}.gj-min{margin-top:12px;font-size:13px;color:var(--muted)}.gj-min b{font-size:22px;color:var(--ink);margin-right:4px}
+.gj-week{margin-top:10px}.gj-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:58px;margin-top:6px}.gj-bars span{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%}
+.gj-bars i{display:block;width:100%;border-radius:4px;background:rgba(255,200,61,.35)}.gj-bars i.on{background:var(--yellow)}.gj-bars small{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase}
+.gj-list{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:12px}.gj-list li{display:flex;justify-content:space-between;gap:8px}.gj-list span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gj-none{margin:10px 0 0;font-size:12px;color:var(--muted)}
+.gj-copy{margin-top:12px;width:100%;min-height:40px;border-radius:10px;border:1px solid rgba(255,200,61,.5);background:transparent;color:var(--yellow);font:600 13px/1.2 inherit;font-family:inherit;cursor:pointer}.gj-copy:hover{background:rgba(255,200,61,.1)}
+.qf-daily{position:relative;width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:16px 70px 16px 16px;border-radius:18px;border:0;text-align:left;cursor:pointer;color:#1a1204;font:inherit;
+  background:radial-gradient(120% 140% at 0% 0%,#fff1b0 0%,#ffc83d 35%,#c98a12 75%,#8a5a06 100%);box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 10px 30px rgba(255,200,61,.25)}
+.qf-daily .qd-l{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;opacity:.75}.qf-daily b{font-size:20px;font-weight:800}.qf-daily small{font-size:12px;opacity:.8}
+.qf-daily .qd-go{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(26,18,4,.88);color:#ffd66e;font-size:15px}
+@media (min-width:761px){.mgame>*{max-width:min(620px,calc(100vh - 320px));margin-left:auto!important;margin-right:auto!important}.mgame .mg-top{max-width:min(620px,calc(100vh - 320px))}}
+.qsg{display:flex;flex-direction:column;gap:10px}.qsgb{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;border-radius:14px;border:1.5px solid var(--yellow);background:transparent;color:var(--yellow);font:700 16px/1 inherit;font-family:inherit;cursor:pointer}
+.qsgb:hover{background:rgba(255,200,61,.1)}.qsgb.on{background:#ededeb;border-color:#ededeb;color:#16151c}
+.sgscore{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.sgscore span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border-radius:10px;background:rgba(255,255,255,.06)}
+.sgscore small{font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}.sgscore b{font-size:18px}.sgscore .p b{color:#1fae6b}.sgscore .g b{color:#7d9bff}.sgscore .m b{color:#e5484d}
 .qfing:not(.on){background:none;border:0;padding:0}.qfing:not(.on)>*{display:none}
 .qfing>div:empty{display:none}#qftop,#qfbot,.qf-grp{display:flex;flex-direction:column;gap:14px}.qf-grp .block{margin:0}.qf-grp h2{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#a9a8b0;margin:0 0 9px;line-height:1.45}.qf-mv:not(:has(>:not([hidden]))){display:none!important}.qf-mv{display:flex;flex-direction:column;gap:14px}.qf-mv>[hidden]{display:none!important}
 .qfing .readout{margin:0!important;border-top:0!important;padding-top:0!important}.qfing .readout .nameline{display:none!important}.qfing [data-gv]>h2{display:none}
@@ -1526,7 +1540,7 @@ function renderScales(L){
   document.getElementById("handsvg").innerHTML=["L","R"].map(h=>`<button class="hand" data-hand="${h}" aria-pressed="${state.hand===h}" aria-label="${h==="R"?L.rh:L.lh}">${handSVG(h,state.hand===h?af:0)}<span>${h==="R"?"RH":"LH"}</span></button>`).join("");
   document.getElementById("focus").innerHTML=(mv?"":`<button class="chip" data-focus="0" aria-pressed="${!state.focus}">${L.all}</button>`)+(mv?movePats():Ly.seq).map(pt=>`<button class="chip" data-focus="${pt}" aria-pressed="${state.focus===pt}">P${pt}</button>`).join("");
   const cur=scaleNow>=0?scaleSeq()[scaleNow]:null;
-  const gOn=sGuide();Ly.notes.forEach(n=>{if(!gOn&&!(cur&&cur.p===n.p))return;marks[n.r*8+n.c]={cls:"sc "+(n.tonic?"tj":"p"+n.pat)+(fset&&!fset.has(n.p)?" dim":"")+(cur&&cur.p===n.p?" fu":""),label:"",aria:"degree "+(n.deg+1)+(n.tonic?"":", pattern "+n.pat)};});
+  const gOn=sGuide();Ly.notes.forEach(n=>{if(!gOn&&!(cur&&cur.p===n.p))return;marks[n.r*8+n.c]={cls:"sc "+(n.tonic?"tj":"p"+n.pat)+(fset&&!fset.has(n.p)?" dim":"")+(cur&&cur.p===n.p?" fu":""),label:sFing()?String(fingerOf(n)):"",aria:"degree "+(n.deg+1)+(n.tonic?"":", pattern "+n.pat)};});
   document.getElementById("grid").innerHTML=padsHTML(marks,false);
   traceData=[];document.getElementById("push").classList.remove("flow");
   const kname=k.modeId?k.sp[0]+" "+L.modeN[k.modeId]:k.sp[0]+" "+L.scale[k.mode];
@@ -1670,6 +1684,7 @@ function padPress(r,c,down,vel,sound){
   if(state.view==="jam"&&jamOn)jgHit(padPitch(r,c));
   if(state.view==="game"&&state.gmode==="parp"&&AP.on)apHit(r,c);
   if(state.view==="exam"&&EX.on)exHit(r,c);
+  gjAct();if(SG.on&&state.view===SG.view)sgHit(r,c);
   if(sound&&!(state.view==="game"&&G.running&&state.gmode==="name")){const a=ac();if(a){if(heldRel[k])heldRel[k]();heldRel[k]=tone(padPitch(r,c),a.currentTime+0.005,6,vel);}}
   if(isPrac())practiceNote(padPitch(r,c),r,c);
   else if(state.view==="game"&&G.running){
@@ -2809,7 +2824,7 @@ function noteUI(pulse){const L=t(),n=todayMedals().length,f=Math.min(1,n/GOAL),b
   pop.innerHTML=`<div class="dn-h">${L.dnTitle}</div><div class="dn-big">${Math.min(n,GOAL)}<small>/${GOAL}</small></div>
     <p>${n>=GOAL?L.dnDone:L.dnLeft.replace("{N}",GOAL-n)}</p>
     <div class="dn-medals">${m.length?m.slice(-20).map(k=>`<span>${MEDAL[k]||"🏅"}</span>`).join(""):`<small>${L.rwEmpty}</small>`}</div>
-    <div class="dn-streak">🔥 ${st} ${st===1?L.rwDay:L.rwDays}</div>`;}
+    <div class="dn-streak">🔥 ${st} ${st===1?L.rwDay:L.rwDays}</div>${typeof gjPopHTML==="function"?gjPopHTML():""}`;}
 document.getElementById("dnote").addEventListener("click",e=>{e.stopPropagation();dnOpen=!dnOpen;noteUI();});
 document.addEventListener("click",e=>{if(dnOpen&&!e.target.closest("#dnPop")){dnOpen=false;noteUI();}});
 document.addEventListener("keydown",e=>{if(dnOpen&&e.key==="Escape"){dnOpen=false;noteUI();document.getElementById("dnote").focus();}});
@@ -2823,7 +2838,7 @@ function showOverlay(kind,icon,title,sub){const el=document.getElementById(MG.id
   el.querySelector(".rw-medal").textContent=icon;el.querySelector(".rw-title").textContent=title;el.querySelector(".rw-sub").textContent=sub;
   el.classList.toggle("bad",kind==="bad");el.hidden=false;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");
   clearTimeout(rwTimer);rwTimer=setTimeout(()=>{el.hidden=true;},kind==="bad"?2600:3600);}
-function awardMedal(kind,title,sub){const d=dailyLoad(),k=dayKey();(d[k]=d[k]||[]).push(kind);
+function awardMedal(kind,title,sub){if(!gjSkip&&typeof gjLog==="function")gjLog({k:kind,n:title,s:sub});gjSkip=false;const d=dailyLoad(),k=dayKey();(d[k]=d[k]||[]).push(kind);
   const keys=Object.keys(d).sort();while(keys.length>120)delete d[keys.shift()]; // guarda unos 4 meses
   dailySave(d);const L=t(),n=d[k].length;
   if(n===GOAL){showOverlay("ok","🎵",L.dnFull,L.dnFullSub.replace("{N}",streakDays()));}
@@ -3094,10 +3109,83 @@ document.addEventListener("click",e=>{
 var QLOCK='<svg class="lk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 const QF={en:{t:"Recommended fingering",fk:"1 index · 2 middle · 3 ring · 4 pinky",sc:"No thumb in scales: its angle makes it hard to hit the pads cleanly and in time.",ar:"Two-octave shape (after S. Burke): learn it once and move it to other keys.",rh:"Right hand",lh:"Left hand",fa:"T thumb · 1 index · 2 middle · 3 ring · 4 pinky",it:"Inversions of {C}",in:"Tap a shape to see it on the grid and notice which note ends up on the bottom. In chords I do use the thumb.",pt:"Your progression",vt:"Voices",vr:["top","middle","bottom"],vc:"common tone with the previous chord",pn:"Tap a card to see that chord. With voice leading, the common tones stay on the same pad and the other notes move as little as possible."},
  es:{t:"Digitación recomendada",fk:"1 índice · 2 medio · 3 anular · 4 meñique",sc:"Sin pulgar en las escalas: por su ángulo cuesta tocar los pads limpio y a tiempo.",ar:"Forma de dos octavas (según S. Burke): apréndela una vez y muévela a otras tonalidades.",rh:"Mano derecha",lh:"Mano izquierda",fa:"T pulgar · 1 índice · 2 medio · 3 anular · 4 meñique",it:"Inversiones de {C}",in:"Toca una forma para verla en el grid y fíjate qué nota queda abajo. En los acordes sí uso el pulgar.",pt:"Tu progresión",vt:"Voces",vr:["arriba","medio","bajo"],vc:"nota común con el acorde anterior",pn:"Toca una tarjeta para ver ese acorde. Con conducción de voces, las notas comunes se quedan en el mismo pad y las demás se mueven lo menos posible."}};
+function sFing(){try{return localStorage.getItem("gj-sfing")==="1";}catch(e){return false;}}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-qsfing]");if(!b)return;try{localStorage.setItem("gj-sfing",b.dataset.qsfing);}catch(_){}render();});
 function sGuide(){try{return localStorage.getItem("gj-sguide")!=="0";}catch(e){return true;}}
-const QG={en:{t:"Grid guide",on:"Show",off:"Hide"},es:{t:"Guía en el grid",on:"Mostrar",off:"Ocultar"}};
+const QG={en:{t:"Grid guide",on:"Show",off:"Hide",f:"Fingers on pads"},es:{t:"Guía en el grid",on:"Mostrar",off:"Ocultar",f:"Dedos en los pads"}};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-qguide]");if(!b)return;try{localStorage.setItem("gj-sguide",b.dataset.qguide);}catch(_){}render();});
+/* ===== Progreso diario: minutos, registro y resumen para el Practice Journal ===== */
+const QJ={en:{min:"min of practice today",week:"Last 7 days",today:"Today",copy:"Copy summary for Practice Journal",copied:"Summary copied",none:"No practice logged yet today.",head:"GridJam practice",time:"Time",streak:"Streak",days:"days",medals:"Medals"},
+ es:{min:"min de práctica hoy",week:"Últimos 7 días",today:"Hoy",copy:"Copiar resumen para Practice Journal",copied:"Resumen copiado",none:"Todavía no hay prácticas registradas hoy.",head:"Práctica en GridJam",time:"Tiempo",streak:"Racha",days:"días",medals:"Medallas"}};
+let gjSkip=false,gjLast=0;
+function gjLoad(){try{return JSON.parse(localStorage.getItem("gj-log"))||{};}catch(e){return {};}}
+function gjSave(d){try{const ks=Object.keys(d).sort();while(ks.length>120)delete d[ks.shift()];localStorage.setItem("gj-log",JSON.stringify(d));}catch(e){}}
+function gjDay(d){const k=dayKey();d[k]=d[k]||{sec:0,e:[]};return d[k];}
+function gjLog(x){const d=gjLoad(),g=gjDay(d),n=new Date();g.e.push({...x,t:String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0")});if(g.e.length>60)g.e.shift();gjSave(d);}
+function gjAct(){gjLast=Date.now();}
+["pointerdown","keydown"].forEach(ev=>document.addEventListener(ev,gjAct,{passive:true}));
+setInterval(()=>{if(document.hidden)return;const busy=(typeof scPlaying!=="undefined"&&scPlaying)||(typeof arpPlaying!=="undefined"&&arpPlaying)||SG.on||(typeof jamOn!=="undefined"&&jamOn)||(typeof EX!=="undefined"&&EX.on)||(typeof AP!=="undefined"&&AP.on);
+  if(busy||Date.now()-gjLast<60000){const d=gjLoad();gjDay(d).sec+=15;gjSave(d);}},15000);
+function gjMin(k){const d=gjLoad();return Math.round(((d[k]||{}).sec||0)/60);}
+function gjPopHTML(){const J=QJ[state.lang]||QJ.en,d=gjLoad(),k=dayKey(),today=d[k]||{sec:0,e:[]},mins=Math.round(today.sec/60);
+  const days=[];for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);days.push(x);}
+  const vals=days.map(x=>Math.round(((d[dayKey(x)]||{}).sec||0)/60)),mx=Math.max(10,...vals);
+  const bars=days.map((x,i)=>`<span title="${vals[i]} min"><i style="height:${Math.max(3,Math.round(vals[i]/mx*38))}px"${i===6?' class="on"':""}></i><small>${x.toLocaleDateString(state.lang==="es"?"es":"en",{weekday:"narrow"})}</small></span>`).join("");
+  const list=today.e.slice(-6).reverse().map(e=>`<li><span>${esc(e.n||"")}</span><b>${e.acc!=null?e.acc+"%":(MEDAL[e.k]||"🏅")}</b></li>`).join("");
+  return `<div class="gj-min"><b>${mins}</b> ${J.min}</div><div class="gj-week"><span class="clab">${J.week}</span><div class="gj-bars">${bars}</div></div>
+    ${list?`<ul class="gj-list">${list}</ul>`:`<p class="gj-none">${J.none}</p>`}<button class="gj-copy" data-gjcopy>${J.copy}</button>`;}
+function gjSummary(){const J=QJ[state.lang]||QJ.en,d=gjLoad(),today=d[dayKey()]||{sec:0,e:[]},st=streakDays();
+  const date=new Date().toLocaleDateString(state.lang==="es"?"es":"en",{day:"numeric",month:"long",year:"numeric"});
+  const lines=[`${J.head} · ${date}`,`${J.time}: ${Math.round(today.sec/60)} min · ${J.streak}: ${st} ${J.days} · ${J.medals}: ${todayMedals().length}`];
+  today.e.forEach(e=>lines.push(`- ${e.t} ${e.n||e.k}${e.acc!=null?": "+e.acc+"%":(e.s?" ("+e.s+")":"")}`));
+  return lines.join("\n");}
+document.addEventListener("click",e=>{if(!e.target.closest("[data-gjcopy]"))return;const J=QJ[state.lang]||QJ.en,txt=gjSummary();
+  const ok=()=>toast(J.copied);if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(ok,()=>prompt("",txt));else prompt("",txt);});
+/* ===== Evalúame: la app escucha y califica (Escalas y Arpegios) ===== */
+const SG={on:false,flash:{}};
+const QS={en:{go:"Test me",stop:"Stop",win:"Nailed it!",done:"Keep practicing",hint:"1 bar count-in, then play along with the click."},es:{go:"Evalúame",stop:"Detener",win:"¡Bien tocada!",done:"Sigue practicando",hint:"Un compás de cuenta y luego toca con el clic."}};
+function sgTargets(){
+  if(state.view==="scales"){const seq=scaleSeq();return {step:60/state.bpm/2,notes:seq.map((n,i)=>({p:n.p,i}))};}
+  if(state.view==="arp"){const Ly=arpLayout();if(!Ly.fit)return null;const seq=arpSeq(Ly);return {step:60/state.bpm/(state.arhy||2),notes:seq.map((n,i)=>({p:n.p,i,ni:Ly.notes.indexOf(n)}))};}
+  return null;}
+function sgStart(){const a=ac();if(!a||SG.on)return;const T=sgTargets();if(!T||!T.notes.length)return;
+  if(scPlaying)stopScale();if(arpPlaying)arpStop();if(metOn)stopMet();
+  const q=60/state.bpm,qs=a.currentTime+.15,t0=qs+4*q;
+  Object.assign(SG,{on:true,view:state.view,step:T.step,q,qs,qi:0,t0,notes:T.notes.map(x=>({...x,t:t0+x.i*T.step,res:null})),st:{p:0,g:0,m:0,w:0},flash:{},cur:-2,started:Date.now()});
+  SG.qn=4+Math.ceil(T.notes.length*T.step/q)+1;
+  render();SG.raf=requestAnimationFrame(sgTick);}
+function sgStop(manual){if(!SG.on)return;SG.on=false;cancelAnimationFrame(SG.raf);if(SG.view==="scales")scaleNow=-1;else arpNow=-1;SG.flash={};killSound&&killSound();if(!manual)sgFinish();render();}
+function sgTick(){if(!SG.on)return;if(state.view!==SG.view){sgStop(true);return;}const a=ac(),now=a.currentTime-jgLat();
+  while(SG.qi<SG.qn&&SG.qs+SG.qi*SG.q<a.currentTime+.12){click(SG.qs+SG.qi*SG.q,SG.qi%4===0);SG.qi++;}
+  for(const x of SG.notes)if(!x.res&&now>x.t+JG_G){x.res="m";SG.st.m++;}
+  let cur=-1;for(const x of SG.notes){if(x.t-SG.step*.5<=now)cur=x.i;else break;}
+  if(cur!==SG.cur){SG.cur=cur;const x=SG.notes[cur];if(SG.view==="scales")scaleNow=(x&&sGuide())?cur:-1;else arpNow=x?x.ni:-1;render();}
+  const sc=document.getElementById("sgscore");if(sc)sc.innerHTML=sgScoreHTML();
+  if(now>SG.notes[SG.notes.length-1].t+.6){sgStop(false);return;}
+  SG.raf=requestAnimationFrame(sgTick);}
+function sgHit(r,c){const a=ac();if(!a)return;const now=a.currentTime-jgLat(),p=padPitch(r,c),key=r+","+c;let best=null,bd=9;
+  for(const x of SG.notes){if(x.res||x.p!==p)continue;const d=Math.abs(x.t-now);if(d<bd){bd=d;best=x;}}
+  let cls;if(best&&bd<=JG_G){best.res=bd<=JG_P?"p":"g";SG.st[best.res]++;cls="ok";}else if(now>SG.t0-.3){SG.st.w++;cls="bad";}else return;
+  SG.flash[key]=cls;sgPaint();setTimeout(()=>{if(SG.flash[key]===cls){delete SG.flash[key];sgPaint();}},180);}
+function sgPaint(){document.querySelectorAll("#grid .pad.sgf").forEach(el=>el.classList.remove("ok","bad","sgf"));
+  for(const k in SG.flash){const el=document.querySelector(`#grid [data-rc="${k}"]`);if(el)el.classList.add(SG.flash[k],"sgf");}
+  if(typeof ledSync==="function")ledSync();}
+function sgAcc(){const s=SG.st,n=SG.notes.length||1;return Math.round((s.p+s.g*.6)/n*100);}
+function sgScoreHTML(){const L=t(),s=SG.st,done=s.p+s.g+s.m,acc=done?Math.round((s.p+s.g*.6)/done*100):0;
+  return `<span><small>${L.jgAcc}</small><b>${done?acc+"%":"–"}</b></span><span class="p"><small>${L.jgPerf}</small><b>${s.p}</b></span><span class="g"><small>${L.jgGood}</small><b>${s.g}</b></span><span class="m"><small>${L.jgMiss}</small><b>${s.m}</b></span><span class="m"><small>${L.apWrong}</small><b>${s.w}</b></span>`;}
+function sgName(){try{if(SG.view==="scales"){const e=document.querySelector("#sreadout .cname");return (e?e.textContent:"")+(state.focus?" · P"+state.focus:"");}const Ly=arpLayout();return Ly.ch.name+" · "+(state.ahand==="L"?"LH":"RH");}catch(e){return "";}}
+function sgFinish(){const L=t(),S=QS[state.lang]||QS.en,s=SG.st,acc=sgAcc();
+  const sub=`${acc}% · ${L.jgPerf} ${s.p} · ${L.jgGood} ${s.g} · ${L.jgMiss} ${s.m} · ${L.apWrong} ${s.w}`;
+  if(typeof gjLog==="function")gjLog({k:SG.view==="scales"?"sc":"ar",n:sgName(),acc,sec:Math.round((Date.now()-SG.started)/1000)});
+  gjSkip=acc>=80;if(acc>=80)awardMedal(SG.view==="scales"?"scale":"arp",S.win,sub);else showOverlay("ok","🎯",S.done,sub);}
+function sgBtn(){const S=QS[state.lang]||QS.en;
+  return SG.on?`<div class="qsg"><button class="qsgb on" data-qsg="stop">■ ${S.stop}</button><div class="sgscore" id="sgscore">${sgScoreHTML()}</div></div>`
+    :`<div class="qsg"><button class="qsgb" data-qsg="go" title="${S.hint}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>${S.go}</button></div>`;}
+document.addEventListener("click",e=>{if(e.target.closest("#qfdaily")){mStart("daily");document.body.classList.add("mmode");return;}
+  if(innerWidth>760&&e.target.closest("#mgBack")){e.stopImmediatePropagation();mHubClose();}},true);
+document.addEventListener("click",e=>{const b=e.target.closest("[data-qsg]");if(!b)return;if(b.dataset.qsg==="go")sgStart();else sgStop(true);});
 function qFing(){
+  if(SG.on)sgPaint();
   const gd=document.getElementById("guide");if(gd){gd.style.display="";if(![...gd.children].some(c=>c.offsetHeight>0))gd.style.display="none";}
   let a=document.getElementById("qfing");
   if(!a){const vp=document.querySelector(".cabin>.viewport");if(!vp)return;a=document.createElement("aside");a.id="qfing";a.className="qfing";a.setAttribute("aria-live","off");
@@ -3108,7 +3196,9 @@ function qFing(){
   const wrap=id=>{let w=document.getElementById(id);if(!w){w=document.createElement("div");w.id=id;w.className="qf-grp";mvb.appendChild(w);}return w;};
   const wj=wrap("qfjam"),wg=wrap("qfgame"),blk=id=>{const e=document.getElementById(id);return e&&(e.closest(".block")||e);};
   [document.getElementById("jreadout"),blk("jstyles"),blk("jprogs")].forEach(n=>{if(n&&n.parentElement!==wj)wj.appendChild(n);});
+  let dly=document.getElementById("qfdaily");if(!dly){dly=document.createElement("button");dly.id="qfdaily";dly.className="qf-daily";wg.insertBefore(dly,wg.firstChild);}
   [blk("gmodes")].forEach(n=>{if(n&&n.parentElement!==wg)wg.appendChild(n);});
+  try{const M=t().mg,bd=(typeof mBest==="function"?mBest():{})["daily-"+dayKey()],dh=`<span class="qd-l">${M.dailyLbl}</span><b>${M.dailyTitle}</b><small>${bd?M.dailyDone.replace("{N}",bd):M.dailyNew}</small><span class="qd-go">▶</span>`;if(dly.dataset.h!==dh){dly.innerHTML=dh;dly.dataset.h=dh;}}catch(e){}
   wj.hidden=state.view!=="jam";wg.hidden=state.view!=="game";
   const F=QF[state.lang]||QF.en,v=state.view;let h="",b="";
   if(rd)rd.hidden=v!=="inv";if(mn&&mn.parentElement)mn.parentElement.hidden=v!=="inv";
@@ -3165,12 +3255,14 @@ function qRender(){
     h=`<div class="qhead"><h2 class="qtitle">${esc(name)}</h2>${ibtn}</div>
     <div class="qplay"><button class="qbig${playing?" on":""}" data-qact="splay"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="${playing?"M6 4h4v16H6zM14 4h4v16h-4z":"M7 4l13 8-13 8z"}"/></svg>${esc(plab)}</button>${tempo}
     <button class="qmet" data-qact="metro" aria-pressed="${metOn}" aria-label="${esc(L.metro||"Metronome")}" title="${esc(L.metro||"Metronome")}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8l-3-17h-2z"/><path d="M12 14l5-6"/></svg></button></div>
+    ${sgBtn()}
     ${keysH}
     <div class="qsec"><span class="qlab">${Q.scale}</span><div class="qtypes" role="group">${it("major")}${it("minor")}</div><div class="qmodes" role="group" aria-label="${Q.modes}">${["dor","mix","lyd","phr","loc"].map(it).join("")}</div></div>
     ${pats?`<div class="qsec"><span class="qlab">${Q.pattern}</span><div class="qpats" role="group">${pats}</div></div>`:""}
     <div class="qduo"><div class="qsec"><span class="qlab">${Q.hand}</span><div class="qtypes" role="group">${hands}</div></div>
     <div class="qsec"><span class="qlab">${Q.dir}</span><div class="qtypes" role="group"><button data-qdir="0" aria-pressed="${!state.sdown}" aria-label="${Q.up}">↑</button><button data-qdir="1" aria-pressed="${!!state.sdown}" aria-label="${Q.updown}">↑↓</button></div></div></div>
-    <div class="qsec"><span class="qlab">${(QG[state.lang]||QG.en).t}</span><div class="qtypes" role="group"><button data-qguide="1" aria-pressed="${sGuide()}">${(QG[state.lang]||QG.en).on}</button><button data-qguide="0" aria-pressed="${!sGuide()}">${(QG[state.lang]||QG.en).off}</button></div></div>`;
+    <div class="qsec"><span class="qlab">${(QG[state.lang]||QG.en).t}</span><div class="qtypes" role="group"><button data-qguide="1" aria-pressed="${sGuide()}">${(QG[state.lang]||QG.en).on}</button><button data-qguide="0" aria-pressed="${!sGuide()}">${(QG[state.lang]||QG.en).off}</button></div></div>
+    <div class="qsec"><span class="qlab">${(QG[state.lang]||QG.en).f}</span><div class="qtypes" role="group"><button data-qsfing="1" aria-pressed="${sFing()}">${(QG[state.lang]||QG.en).on}</button><button data-qsfing="0" aria-pressed="${!sFing()}">${(QG[state.lang]||QG.en).off}</button></div></div>`;
   } else {
     const V={inv:["#readout","play"],prog:["#preadout","pplay"],arp:["#areadout","aplay"],jam:["#jreadout",""]}[state.view]||["",""];
     const nl=V[0]&&document.querySelector(V[0]+" .nameline"),title=nl?nl.innerHTML:"";
@@ -3178,7 +3270,7 @@ function qRender(){
     const met=`<button class="qmet" data-qact="metro" aria-pressed="${metOn}" aria-label="${esc(L.metro||"Metronome")}" title="${esc(L.metro||"Metronome")}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8l-3-17h-2z"/><path d="M12 14l5-6"/></svg></button>`;
     const big=pb?`<button class="qbig${pon?" on":""}" data-qact="${V[1]}"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="${pon?"M6 4h4v16H6zM14 4h4v16h-4z":"M7 4l13 8-13 8z"}"/></svg>${esc(pon?Q.stop:Q.play)}</button>`:"";
     h=`<div class="qhead">${title?`<h2 class="qtitle qtitle-r">${title}</h2>`:`<span class="qlab">${Q.tempo}</span>`}${ibtn}</div>
-    <div class="qplay${big?"":" qplay-nb"}">${big}${tempo}${met}</div>
+    <div class="qplay${big?"":" qplay-nb"}">${big}${tempo}${met}</div>${state.view==="arp"?sgBtn():""}
     ${keysH}
     <div class="qsec"><span class="qlab">${Q.scale}</span><div class="qtypes" role="group">${it("major")}${it("minor")}</div></div>`;
   }
