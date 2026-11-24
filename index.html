@@ -847,8 +847,8 @@ body.qinfo .con-r .readout .invname{display:block!important}
 .qf-n small{font-family:var(--mono);font-size:15px;font-weight:600;line-height:1.2}
 .qf-note{margin:0;font-size:12px;line-height:1.45;color:var(--muted)}
 @media (min-width:1241px){
-  .cabin{grid-template-columns:360px minmax(0,1fr) 360px!important;gap:22px!important;align-items:stretch!important}
-  .qfing,.con-r{align-self:stretch!important;max-height:none!important}
+  .cabin{grid-template-columns:360px minmax(0,1fr) 360px!important;gap:22px!important;align-items:start!important}
+  .qfing,.con-r{align-self:start!important;max-height:none!important}
   .qfing{position:static}
 }
 @media (min-width:1560px){
@@ -3100,6 +3100,8 @@ function qFing(){
       h=`<h3>${F.t}</h3>`+hands("data-ahand",state.ahand,af,F.fa)+`<div class="qf-row"><span class="qf-p">${Ly.ch.name}</span><div class="qf-n">${seq.map(n=>`<span class="${n.role===0?"tj":""}${cn===n?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${n.f}</small></span>`).join("")}</div></div><p class="qf-note">${F.ar}</p>`;}}
   }catch(e){h="";}
   if(a.dataset.h!==h){a.innerHTML=h;a.dataset.h=h;}
+  requestAnimationFrame(()=>{const r=document.querySelector(".con-r");const wide=innerWidth>=1241&&h;a.style.minHeight="";if(r)r.style.minHeight="";
+    if(wide&&r){const m=Math.max(a.offsetHeight,r.offsetHeight)+"px";a.style.minHeight=m;r.style.minHeight=m;}});
 }
 function qRender(){
   if(!QT)return;const el=document.getElementById("qkeys");if(!el)return;const L=t(),Q=qT();
