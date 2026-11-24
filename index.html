@@ -3110,7 +3110,7 @@ function qFing(){
       h=`<h3>${F.t}</h3>`+hands("data-hand",state.hand,af)+Ly.seq.map((pt,i)=>`<div class="qf-row${fi>=0&&fi!==i?" dim":""}"><span class="qf-p">P${pt}</span><div class="qf-n">${Ly.notes.filter(n=>n.pat===pt).map(n=>`<span class="${n.tonic?"tj":""}${cur&&cur.p===n.p?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${fingerOf(n)}</small></span>`).join("")}</div></div>`).join("")+`<p class="qf-note">${F.sc}</p>`;}}
   else if(v==="arp"){const Ly=arpLayout();
     if(Ly.fit){const seq=arpSeq(Ly),cn=arpPlaying&&arpNow>=0?Ly.notes[arpNow]:null,af=cn&&typeof cn.f==="number"?cn.f:0;
-      h=`<h3>${F.t}</h3>`+hands("data-ahand",state.ahand,af,F.fa)+`<div class="qf-row"><span class="qf-p">${Ly.ch.name}</span><div class="qf-n">${seq.map(n=>`<span class="${n.role===0?"tj":""}${cn===n?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${n.f}</small></span>`).join("")}</div></div><p class="qf-note">${F.ar}</p>`;}}
+      h=`<h3>${F.t}</h3>`+hands("data-ahand",state.ahand,af,F.fa)+`<div class="qf-row"><span class="qf-p">${Ly.ch.name}</span><div class="qf-n">${seq.map(n=>`<span class="${n.role===0?"tj":""}${cn===n?" now":""}"><b>${pcName(((n.p%12)+12)%12)}</b><small>${n.f}</small></span>`).join("")}</div></div>`;}}
   else if(v==="inv"){h=`<h3>${F.it.replace("{C}",chordInfo(state.deg).name)}</h3>`;b=`<p class="qf-note">${F.in}</p>`;}
   else if(v==="prog"){h=`<h3>${F.pt}</h3>`;const V=voicings();
     if(V.length){const rows=[2,1,0].map(k=>`<tr><th>${F.vr[2-k]}</th>${V.map((x,i)=>{const n=x.pads[k];if(!n)return "<td></td>";const prev=i>0?V[i-1].pads:null,cm=prev&&prev.some(y=>y.p===n.p);return `<td class="${i===state.step?"cur ":""}${cm?"cm":""}">${pcName(((n.p%12)+12)%12)}</td>`;}).join("")}</tr>`).join("");
